@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from 'react'
 import {
   CreditCardIcon,
   LogOutIcon,
@@ -29,18 +30,36 @@ import {
 } from '@/components/ui/sidebar'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth-provider'
+import { getCurrentUserData } from '@/dbQueryFirebase'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const { user, logout } = useAuth()
   const router = useRouter()
+  const [userData, setUserData] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.uid) return
+      
+      try {
+        const userDataFromFirebase = await getCurrentUserData(user.uid)
+        setUserData(userDataFromFirebase)
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    fetchUserData()
+  }, [user])
 
   if (!user) {
     return null
   }
 
-  const displayName = user.displayName || user.email?.split('@')[0] || 'User'
-  const email = user.email || 'No email'
+  // Use the complete user data if available, otherwise fall back to basic auth data
+  const displayName = userData?.name || user.displayName || user.email?.split('@')[0] || 'User'
+  const email = userData?.email || user.email || 'No email'
   const avatarUrl = user.photoURL || ''
 
   return (
@@ -82,6 +101,11 @@ export function NavUser() {
                   <span className="truncate text-xs text-muted-foreground">
                     {email}
                   </span>
+                  {userData?.orgName && (
+                    <span className="truncate text-xs text-muted-foreground">
+                      {userData.orgName}
+                    </span>
+                  )}
                 </div>
               </div>
             </DropdownMenuLabel>
