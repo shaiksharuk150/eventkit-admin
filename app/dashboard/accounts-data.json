@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "companyName": "Innovate Inc.",
+    "contactPH": "123-456-7890",
+    "companyCode": "INOV8",
+    "status": "Active",
+    "plan": "Premium",
+    "planRenewalsOn": "2024-12-31",
+    "usersCount": 50
+  },
+  {
+    "id": 2,
+    "companyName": "Tech Solutions",
+    "contactPH": "234-567-8901",
+    "companyCode": "TECHSOL",
+    "status": "Inactive",
+    "plan": "Basic",
+    "planRenewalsOn": "2024-10-15",
+    "usersCount": 10
+  },
+  {
+    "id": 3,
+    "companyName": "Future Group",
+    "contactPH": "345-678-9012",
+    "companyCode": "FUTRGRP",
+    "status": "Active",
+    "plan": "Enterprise",
+    "planRenewalsOn": "2025-01-20",
+    "usersCount": 200
+  },
+  {
+    "id": 4,
+    "companyName": "Data Dynamics",
+    "contactPH": "456-789-0123",
+    "companyCode": "DATADYN",
+    "status": "Active",
+    "plan": "Premium",
+    "planRenewalsOn": "2024-11-30",
+    "usersCount": 75
+  },
+  {
+    "id": 5,
+    "companyName": "Synergy Corp",
+    "contactPH": "567-890-1234",
+    "companyCode": "SYNERGY",
+    "status": "Pending",
+    "plan": "Basic",
+    "planRenewalsOn": "2024-09-01",
+    "usersCount": 5
+  }
+] 
