@@ -3,29 +3,9 @@
 import * as React from "react"
 import {
   ArrowUpCircleIcon,
-  BarChartIcon,
-  CameraIcon,
-  ClipboardListIcon,
-  DatabaseIcon,
-  FileCodeIcon,
-  FileIcon,
-  FileTextIcon,
-  FolderIcon,
-  HelpCircleIcon,
-  LayoutDashboardIcon,
-  ListIcon,
-  SearchIcon,
-  SettingsIcon,
   UsersIcon,
-  CreditCardIcon,
-  NetworkIcon,
-  StarIcon,
-  KeyRoundIcon,
 } from "lucide-react"
 
-import { NavDocuments } from '@/components/nav-documents'
-import { NavMain } from '@/components/nav-main'
-import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
 import {
   Sidebar,
@@ -38,68 +18,13 @@ import {
 } from '@/components/ui/sidebar'
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "",
-  },
   navMain: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutDashboardIcon,
-    },
-    {
-      title: "Accounts",
-      url: "/accounts",
-      icon: ListIcon,
-    },
-    {
-      title: "Users",
-      url: "/users",
+      title: "Visitors",
+      url: "/visitors",
       icon: UsersIcon,
     },
-    {
-      title: "Payments",
-      url: "/payments",
-      icon: CreditCardIcon,
-    },
-    {
-      title: "Plans",
-      url: "/plans",
-      icon: FileTextIcon,
-    },
-    {
-      title: "Payment Gateway",
-      url: "/payment-gateway",
-      icon: NetworkIcon,
-    },
-    {
-      title: "Leads",
-      url: "/leads",
-      icon: StarIcon,
-    },
-    {
-      title: "Portal Access",
-      url: "/portal-access",
-      icon: KeyRoundIcon,
-    },
   ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: DatabaseIcon,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: SettingsIcon,
-    },
-  ],
-  
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -114,19 +39,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <ArrowUpCircleIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Redefine Portal</span>
+                <span className="text-base font-semibold">EventKit Admin</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <SidebarMenu>
+          {data.navMain.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <a href={item.url}>
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.title}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   )

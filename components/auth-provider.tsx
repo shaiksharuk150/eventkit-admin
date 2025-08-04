@@ -1,44 +1,91 @@
 'use client'
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged, 
+  User,
+  GoogleAuthProvider,
+  signInWithPopup
+} from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
 interface AuthContextType {
+  user: User | null
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<boolean>
-  logout: () => void
+  signup: (email: string, password: string) => Promise<boolean>
+  logout: () => Promise<void>
+  signInWithGoogle: () => Promise<boolean>
+  loading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const DEMO_EMAIL = 'demo@demo.com'
-const DEMO_PASSWORD = 'password'
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Initialize auth state from localStorage to persist session on refresh
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('auth') : null
-    setIsAuthenticated(stored === 'true')
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user)
+      setLoading(false)
+    })
+
+    return () => unsubscribe()
   }, [])
 
   const login = async (email: string, password: string) => {
-    // Simulate authentication check against demo credentials
-    if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
-      localStorage.setItem('auth', 'true')
-      setIsAuthenticated(true)
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
       return true
+    } catch (error: any) {
+      console.error('Login error:', error.message)
+      return false
     }
-    return false
   }
 
-  const logout = () => {
-    localStorage.removeItem('auth')
-    setIsAuthenticated(false)
+  const signup = async (email: string, password: string) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password)
+      return true
+    } catch (error: any) {
+      console.error('Signup error:', error.message)
+      return false
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider()
+      await signInWithPopup(auth, provider)
+      return true
+    } catch (error: any) {
+      console.error('Google sign in error:', error.message)
+      return false
+    }
+  }
+
+  const logout = async () => {
+    try {
+      await signOut(auth)
+    } catch (error: any) {
+      console.error('Logout error:', error.message)
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isAuthenticated: !!user, 
+      login, 
+      signup, 
+      logout, 
+      signInWithGoogle,
+      loading 
+    }}>
       {children}
     </AuthContext.Provider>
   )
